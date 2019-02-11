@@ -1,0 +1,38 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.next
+release.properties
+
+# Gradle
+.gradle
+build
+out
+jenkins.properties
+
+# Java
+*.class
+*.war
+*.ear
+*.log
+*.err
+
+# Eclipse
+.project
+.classpath
+.settings
+/bin
+
+#WebStorm
+/.idea
+
+# NetBeans
+nb-configuration.xml
+nbactions.xml
+
+#IntelliJ
+licensehandler.iml
+.idea/
+*.iml
+

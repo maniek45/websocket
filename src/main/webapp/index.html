@@ -1,0 +1,65 @@
+<label for="connections">Number of websocket connections:</label>
+<input id="connections" type="number" value="1"/>
+<br><br>
+<label for="text">Text to send:</label>
+<input id="text"/>
+<button id="send" onclick="sendText()" disabled>Send text</button>
+<button id="open" onclick="openConnections()">Open connection</button>
+<button id="close" onclick="closeConnections()" disabled>Close connection</button>
+<br><br>
+<label for="response">Server response:</label>
+<div id="response" class="events"></div>
+<script>
+    var numberOfConnections = document.querySelector("#connections").value;
+    var clientWebSockets = new Array(numberOfConnections);
+
+    function events(responseEvent) {
+        document.querySelector(".events").innerHTML += responseEvent + "<br>";
+    }
+
+    function sendText() {
+        var text = document.querySelector("#text").value;
+        clientWebSockets.forEach(function(clientWebSocket, index) {
+            clientWebSocket.send((index + 1) + "." + text);
+        });
+    }
+
+    function openConnections() {
+        for (var i = 0; i < clientWebSockets.length; i++) {
+            clientWebSockets[i] = openConnection(i + 1);
+        }
+        document.querySelector("#send").disabled = false;
+        document.querySelector("#open").disabled = true;
+        document.querySelector("#close").disabled = false;
+    }
+
+    function closeConnections() {
+        clientWebSockets.forEach(function(clientWebSocket) {
+            clientWebSocket.close();
+        });
+        document.querySelector("#send").disabled = true;
+        document.querySelector("#open").disabled = false;
+        document.querySelector("#close").disabled = true;
+    }
+
+    function openConnection(id) {
+        var clientWebSocket = new WebSocket("wss://" + location.host + "/ws/" + id);
+        clientWebSocket.onopen = function () {
+            console.log("clientWebSocket.onopen", clientWebSocket);
+            console.log("clientWebSocket.readyState", clientWebSocket.readyState);
+        };
+        clientWebSocket.onclose = function (error) {
+            console.log("clientWebSocket.onclose", clientWebSocket, error);
+            events("Closing connection");
+        };
+        clientWebSocket.onerror = function (error) {
+            console.log("clientWebSocket.onerror", clientWebSocket, error);
+            events("An error occured");
+        };
+        clientWebSocket.onmessage = function (error) {
+            console.log("clientWebSocket.onmessage", clientWebSocket, error);
+            events(error.data);
+        };
+        return clientWebSocket;
+    }
+</script>

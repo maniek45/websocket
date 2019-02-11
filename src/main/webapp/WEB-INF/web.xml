@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+	<display-name>Websocket</display-name>
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/index.html</location>
+	</error-page>
+
+	<!-- session timeout -->
+	<session-config>
+		<session-timeout>0</session-timeout><!-- TODO temporary fix! Session timeout should 30 minutes -->
+		<tracking-mode>URL</tracking-mode>
+	</session-config>
+
+	<!-- this security-constraint is for removing TRACE and TRACK REST methods because of security reasons-->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>restricted methods</web-resource-name>
+			<url-pattern>/*</url-pattern>
+			<http-method>TRACE</http-method>
+			<http-method>TRACK</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>fakeadmin</role-name>
+		</auth-constraint>
+	</security-constraint>
+</web-app>
